@@ -3,11 +3,15 @@
 //Javier Bolong
 #include <iostream>
 #include <fstream>
+#include<bits/stdc++.h>
+#include <iostream>
 #include <vector>
+
+using namespace std;
 
 class XYDataProcessor {
 public:
-    bool importFromFile(const std::string& filename, std::vector<float>& xValues, std::vector<float>& yValues) {
+    bool importFromFile(const std::string& filename, std::vector<double>& xValues, std::vector<double>& yValues) {
         std::ifstream inputFile(filename);
 
         if (!inputFile.is_open()) {
@@ -15,7 +19,7 @@ public:
             return false;
         }
 
-        float x, y;
+        double x, y;
         while (inputFile >> x >> y) {
             xValues.push_back(x);
             yValues.push_back(y);
@@ -26,16 +30,13 @@ public:
     }
 };
 
-float crossCorrelation(const std::vector<float>& X_raw, const std::vector<float>& Y_raw, int n_X, int n_Y) {
-    float average_X = 0, average_Y = 0, proc_X = 0, proc_Y = 0, counter = 0, hold = 0;
+double crossCorrelation(const std::vector<double>& X_raw, const std::vector<double>& Y_raw, int n_X, int n_Y) {
+    double average_X = 0, average_Y = 0, proc_X = 0, proc_Y = 0, counter = 0, hold = 0;
 
-    std::vector<float> list_proc_X = {};
-    std::vector<float> list_proc_Y = {};
+    std::vector<double> list_proc_X = {};
+    std::vector<double> list_proc_Y = {};
 
-    std::vector<float> cross_X = {};
-    std::vector<float> cross_Y = {};
-
-    std::vector<float> r_XY = {};
+    std::vector<double> r_XY = {};
 
     for (int i = 0; i < n_X; i++) {
         average_X += X_raw[i];
@@ -84,16 +85,18 @@ float crossCorrelation(const std::vector<float>& X_raw, const std::vector<float>
         std::cout << r_XY[a] << ", ";
     }
     std::cout << std::endl;
-     std::ofstream outputFile("cross_correlation.txt");
+
+    std::ofstream outputFile("cross_correlation.txt");
     if (outputFile.is_open()) {
         for (int i = 0; i < r_XY.size(); i++) {
             outputFile << r_XY[i] << std::endl;
         }
         outputFile.close();
-        std::cout << "Sucess" << std::endl;
+        std::cout << "Success" << std::endl;
     } else {
-        std::cerr << "Failed to open " << std::endl;
+        std::cerr << "Failed to open cross_correlation.txt" << std::endl;
     }
+
     return 0;
 }
 
@@ -119,7 +122,3 @@ int main() {
         crossCorrelation(X, Y, n_X, n_Y);
     } else {
         std::cerr << "Import failed." << std::endl;
-    }
-
-    return 0;
-}
